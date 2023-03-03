@@ -136,18 +136,15 @@ void classTreeModel::addItem(shared_ptr<maoMetaObject> propertyObject,
     bool is_array = field->is_array();
     if (!is_array) {
       if (field_type == "int" || field_type == "float" ||
-          field_type == "double" || field_type == "bool") {
-        classTreeItem *row_item =
-            new classTreeItem(QString::fromStdString(field->name()),
-                              propertyObject, propertyItem);
+          field_type == "double" || field_type == "bool" ||
+          field_type == "string") {
+        new classTreeItem(QString::fromStdString(field->name()), propertyObject,
+                          propertyItem);
       } else {
         shared_ptr<maoMetaObject> val;
         field->get(propertyObject, val);
         if (val) {
           addItem(val, propertyItem);
-          // classTreeItem *row_item = new
-          // classTreeItem(QString::fromStdString(val->get_class_name()), val,
-          // propertyItem);
         }
       }
     } else {
@@ -156,33 +153,37 @@ void classTreeModel::addItem(shared_ptr<maoMetaObject> propertyObject,
         size_t array_size = field->size<int>(propertyObject);
         for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
           int *val = field->get<int>(propertyObject, array_idx);
-          classTreeItemCommon *row_item = new classTreeItemCommon(
-              QString::fromStdString(field->name()), (void *)val,
-              QMetaType::Int, propertyItem);
+          new classTreeItemCommon(QString::fromStdString(field->name()),
+                                  (void *)val, QMetaType::Int, propertyItem);
         }
       } else if (sub_field_type == "float") {
         size_t array_size = field->size<float>(propertyObject);
         for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
           float *val = field->get<float>(propertyObject, array_idx);
-          classTreeItemCommon *row_item = new classTreeItemCommon(
-              QString::fromStdString(field->name()), (void *)val,
-              QMetaType::Float, propertyItem);
+          new classTreeItemCommon(QString::fromStdString(field->name()),
+                                  (void *)val, QMetaType::Float, propertyItem);
         }
       } else if (sub_field_type == "double") {
         size_t array_size = field->size<double>(propertyObject);
         for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
           double *val = field->get<double>(propertyObject, array_idx);
-          classTreeItemCommon *row_item = new classTreeItemCommon(
-              QString::fromStdString(field->name()), (void *)val,
-              QMetaType::Double, propertyItem);
+          new classTreeItemCommon(QString::fromStdString(field->name()),
+                                  (void *)val, QMetaType::Double, propertyItem);
         }
       } else if (sub_field_type == "bool") {
         size_t array_size = field->size<bool>(propertyObject);
         for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
           bool *val = field->get<bool>(propertyObject, array_idx);
-          classTreeItemCommon *row_item = new classTreeItemCommon(
-              QString::fromStdString(field->name()), (void *)val,
-              QMetaType::Bool, propertyItem);
+          new classTreeItemCommon(QString::fromStdString(field->name()),
+                                  (void *)val, QMetaType::Bool, propertyItem);
+        }
+      } else if (sub_field_type == "string") {
+        size_t array_size = field->size<bool>(propertyObject);
+        for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
+          std::string *val = field->get<std::string>(propertyObject, array_idx);
+          new classTreeItemCommon(QString::fromStdString(field->name()),
+                                  (void *)val, QMetaType::QString,
+                                  propertyItem);
         }
       } else {
         size_t array_size =

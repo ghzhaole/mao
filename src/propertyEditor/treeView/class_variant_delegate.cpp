@@ -26,6 +26,7 @@ QWidget* classVariantDelegate::createEditor(QWidget* parent,
     case QMetaType::Float:
     case QVariant::Double:
     case QVariant::Bool:
+    case QVariant::String:
       editor = p->createEditor(parent, option);
       if (editor) {
         if (editor->metaObject()->indexOfSignal("editFinished()") != -1) {
@@ -51,6 +52,7 @@ void classVariantDelegate::setEditorData(QWidget* editor,
     case QMetaType::Float:
     case QVariant::Bool:
     case QVariant::Int:
+    case QVariant::String:
       if (static_cast<classTreeItem*>(index.internalPointer())
               ->setEditorData(
                   editor,
@@ -70,7 +72,8 @@ void classVariantDelegate::setModelData(QWidget* editor,
     case QMetaType::Double:
     case QMetaType::Float:
     case QVariant::Bool:
-    case QVariant::Int: {
+    case QVariant::Int:
+    case QVariant::String: {
       QVariant data = static_cast<classTreeItem*>(index.internalPointer())
                           ->editorData(editor);
       if (data.isValid()) {

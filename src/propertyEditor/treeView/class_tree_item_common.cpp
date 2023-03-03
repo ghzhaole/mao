@@ -25,6 +25,9 @@ qvariant classTreeItemCommon::value(int role) const {
       case QMetaType::Bool:
         return *(bool*)(val_.value<void*>());
         break;
+      case QMetaType::QString:
+        return QString::fromStdString(*(std::string*)(val_.value<void*>()));
+        break;
       default:
         break;
     }
@@ -44,6 +47,9 @@ void classTreeItemCommon::setValue(const qvariant& value) {
       break;
     case QMetaType::Bool:
       *(bool*)(val_.value<void*>()) = value.toBool();
+      break;
+    case QMetaType::QString:
+      *(std::string*)(val_.value<void*>()) = value.toString().toStdString();
       break;
     default:
       break;

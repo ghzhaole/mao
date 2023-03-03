@@ -4,6 +4,7 @@
 
 #include "class_tree_item.h"
 
+#include <QLineEdit>
 #include <QSpinBox>
 
 #include "class_bool_combo.h"
@@ -37,6 +38,10 @@ qvariant classTreeItem::value(int role) const {
         bool val = false;
         field->get(property_obj_, val);
         return QVariant(val);
+      } else if (field_type == "string") {
+        std::string val = "";
+        field->get(property_obj_, val);
+        return QVariant(QString::fromStdString(val));
       }
     }
   }
@@ -56,6 +61,8 @@ void classTreeItem::setValue(const qvariant &value) {
         field->set(property_obj_, value.toDouble());
       } else if (field_type == "bool") {
         field->set(property_obj_, value.toBool());
+      } else if (field_type == "string") {
+        field->set(property_obj_, value.toString().toStdString());
       }
     }
   }
@@ -68,11 +75,6 @@ QWidget *classTreeItem::createEditor(QWidget *parent,
       auto editor = new QSpinBox(parent);
       editor->setProperty("minimum", INT_MIN);
       editor->setProperty("maximum", INT_MAX);
-      /*connect(editor,
-                      static_cast<void
-         (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
-                      [=](int val) { setValue(QVariant(val)); });*/
-
       return editor;
       break;
     }
@@ -81,17 +83,16 @@ QWidget *classTreeItem::createEditor(QWidget *parent,
       auto editor = new QDoubleSpinBox(parent);
       editor->setProperty("minimum", INT_MIN);
       editor->setProperty("maximum", INT_MAX);
-      /*connect(editor,
-                      static_cast<void
-         (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), this,
-                      [=](double val) { setValue(QVariant(val)); });*/
       return editor;
       break;
     }
     case qvariant::Bool: {
       auto editor = new classBoolCombo(parent);
-      // connect(editor, &classBoolCombo::valueChanged, this, [=](bool val) {
-      // setValue(QVariant(val)); });
+      return editor;
+      break;
+    }
+    case qvariant::String: {
+      auto editor = new QLineEdit(parent);
       return editor;
       break;
     }
@@ -122,6 +123,12 @@ bool classTreeItem::setEditorData(QWidget *editor, const QVariant &data) {
       editor->blockSignals(false);
       return true;
     }
+    case qvariant::String: {
+      editor->blockSignals(true);
+      static_cast<QLineEdit *>(editor)->setText(data.toString());
+      editor->blockSignals(false);
+      return true;
+    }
     default:
       break;
   }
@@ -139,6 +146,9 @@ QVariant classTreeItem::editorData(QWidget *editor) {
     }
     case qvariant::Bool: {
       return QVariant(static_cast<classBoolCombo *>(editor)->value());
+    }
+    case qvariant::String: {
+      return QVariant(static_cast<QLineEdit *>(editor)->text());
     }
     default:
       break;
