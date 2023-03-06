@@ -69,6 +69,10 @@ void write(const std::shared_ptr<metaObject> &objPtr,
       bool val = false;
       field->get(objPtr, val);
       writer.Bool(val);
+    } else if (field_type == "string") {
+      string val = "";
+      field->get(objPtr, val);
+      writer.String(val);
     } else {
       std::shared_ptr<metaObject> subObj;
       field->get(objPtr, subObj);
@@ -118,6 +122,13 @@ void write(const std::shared_ptr<metaObject> &objPtr,
         bool val = 0;
         field->get(objPtr, array_idx, val);
         writer.Bool(val);
+      }
+    }else if (sub_field_type == "string") {
+      size_t array_size = field->size<string>(objPtr);
+      for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
+        string val = "";
+        field->get(objPtr, array_idx, val);
+        writer.String(val);
       }
     } else {
       size_t array_size = field->size<std::shared_ptr<metaObject>>(objPtr);
@@ -177,6 +188,8 @@ void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
       field->set(objPtr, ret->value.GetDouble());
     } else if (field_type == "bool") {
       field->set(objPtr, ret->value.GetBool());
+    } else if (field_type == "string") {
+      field->set(objPtr, ret->value.GetString());
     } else {
       std::shared_ptr<metaObject> subObj;
       read(subObj, ret->value);
@@ -214,6 +227,11 @@ void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
       for (SizeType i = 0; i < ret_value.Size(); ++i) {
         auto &json_index_value = ret_value[i];
         field->set(objPtr, i, json_index_value.GetBool());
+      }
+    }else if (sub_field_type == "string") {
+      for (SizeType i = 0; i < ret_value.Size(); ++i) {
+        auto &json_index_value = ret_value[i];
+        field->set(objPtr, i, json_index_value.GetString());
       }
     } else {
       for (SizeType i = 0; i < ret_value.Size(); ++i) {

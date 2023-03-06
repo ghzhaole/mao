@@ -42,7 +42,7 @@
   <customwidget>
    <class>mao::propertyEditor::classTreeWdiget</class>
    <extends>QTreeView</extends>
-   <header>propertyEditor/treeView/class_tree_widget.h</header>
+   <header>../../src/propertyEditor/treeView/class_tree_widget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
