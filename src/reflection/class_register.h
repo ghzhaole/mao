@@ -11,29 +11,24 @@ namespace mao::reflection {
 class classRegister {
  public:
   classRegister(const string &className, metaObjectCreator creator) {
-    classFactory::instance()->register_class(className, creator);
+	classFactory::instance()->register_class(className, creator);
   }
 
-  classRegister(const string &className, const string &parentClassName,
-                metaObjectCreator creator) {
-    classFactory::instance()->register_class(className, parentClassName,
-                                             creator);
+  classRegister(const string &className, const string &parentClassName, metaObjectCreator creator) {
+	classFactory::instance()->register_class(className, parentClassName, creator);
   }
 
-  classRegister(const string &className, size_t offset, const string &fieldName,
-                const string &fieldType) {
-    classFactory::instance()->register_class_field(className, offset, fieldName,
-                                                   fieldType);
-  }
-
-  classRegister(const string &className, size_t offset, const string &fieldName,
-                const string &fieldType, const string &fieldSubType,
-                bool is_array) {
-    classFactory::instance()->register_class_field(
-        className, offset, fieldName, fieldType, fieldSubType, is_array);
+  template<typename ... Ts>
+  classRegister(const string &className,
+				size_t offset,
+				const string &fieldName,
+				const string &fieldType,
+				const Ts &...fieldSubType) {
+	classFactory::instance()->register_class_field(className, offset, fieldName, fieldType, fieldSubType...);
   }
 };
 }  // namespace mao::reflection
+
 #define REGISTER_CLASS(className)                                          \
   std::shared_ptr<mao::reflection::metaObject> createObject##className() { \
     std::shared_ptr<mao::reflection::metaObject> obj =                     \
@@ -52,13 +47,12 @@ class classRegister {
   }                                                                        \
   mao::reflection::classRegister classRegister##className(                 \
       #className, #parentClassName, createObject##className);
-#define REGISTER_CLASS_FIELD(className, fieldName, fieldType)           \
-  mao::reflection::classRegister classRegister##className##fieldName(   \
+#define REGISTER_CLASS_FIELD(className, fieldName, fieldType) \
+mao::reflection::classRegister classRegister##className##fieldName(   \
       #className, (size_t)(&(((className *)0)->fieldName)), #fieldName, \
       #fieldType);
-#define REGISTER_CLASS_FIELD_ARRAY(className, fieldName, fieldType,     \
-                                   fieldSubType)                        \
-  mao::reflection::classRegister classRegister##className##fieldName(   \
+#define REGISTER_CLASS_FIELD_1(className, fieldName, fieldType,subType) \
+mao::reflection::classRegister classRegister##className##fieldName(   \
       #className, (size_t)(&(((className *)0)->fieldName)), #fieldName, \
-      #fieldType, #fieldSubType, true);
+      #fieldType,#subType);
 #endif  // MAO_CLASS_REGISTER_H

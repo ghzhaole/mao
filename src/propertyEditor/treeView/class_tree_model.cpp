@@ -133,7 +133,7 @@ void classTreeModel::addItem(shared_ptr<maoMetaObject> propertyObject,
   for (size_t field_idx = 0; field_idx < field_count; ++field_idx) {
     auto field = propertyObject->get_field(field_idx);
     auto field_type = field->type();
-    bool is_array = field->is_array();
+    bool is_array = field->is_list();
     if (!is_array) {
       if (field_type == "int" || field_type == "float" ||
           field_type == "double" || field_type == "bool" ||

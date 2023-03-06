@@ -25,9 +25,9 @@ struct child : public parent {
   int j{1};
   int c{10};
   float k{2.1f};
-  double l{3.4};
+  double l{3.7};
   bool b{true};
-  std::string s{"hello"};
+  std::string s{"1233434"};
   std::vector<std::shared_ptr<point>> points;
 };
 #endif  // MAO_TEST_STRUCT_H
