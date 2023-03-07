@@ -16,6 +16,7 @@
 namespace mao::propertyEditor {
 using maoMetaObject = mao::reflection::metaObject;
 using maoField = mao::reflection::classField;
+using maoMetaType = mao::reflection::metaTypes;
 using std::shared_ptr;
 using qstring = QString;
 using std::string;

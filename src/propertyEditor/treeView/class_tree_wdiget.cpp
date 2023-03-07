@@ -1,4 +1,3 @@
-
 #include <iostream>
 
 #include "class_tree_model.h"
@@ -6,7 +5,7 @@
 #include "class_variant_delegate.h"
 
 namespace mao::propertyEditor {
-classTreeWdiget::classTreeWdiget(QWidget* parent) : QTreeView(parent) {
+classTreeWdiget::classTreeWdiget(QWidget *parent) : QTreeView(parent) {
   model_ = new classTreeModel();
   setModel(model_);
   setItemDelegate(new classVariantDelegate(this));

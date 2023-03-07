@@ -6,6 +6,7 @@
 #define MAO_SRC_PROPERTYEDITOR_TREEVIEW_CLASS_TREE_MODEL_H_
 
 #include <QAbstractItemModel>
+#include <map>
 #include <memory>
 
 namespace mao::reflection {
@@ -15,7 +16,9 @@ class metaObject;
 namespace mao::propertyEditor {
 
 using maoMetaObject = mao::reflection::metaObject;
+using std::map;
 using std::shared_ptr;
+
 class classTreeItem;
 
 class classTreeModel : public QAbstractItemModel {

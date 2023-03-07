@@ -16,6 +16,9 @@ qvariant classTreeItemCommon::value(int role) const {
       case QMetaType::Int:
         return *(int*)(val_.value<void*>());
         break;
+      case QMetaType::LongLong:
+        return *(int64_t*)(val_.value<void*>());
+        break;
       case QMetaType::Double:
         return *(double*)(val_.value<void*>());
         break;
@@ -28,6 +31,9 @@ qvariant classTreeItemCommon::value(int role) const {
       case QMetaType::QString:
         return QString::fromStdString(*(std::string*)(val_.value<void*>()));
         break;
+      case QMetaType::Char:
+        return *(char*)(val_.value<void*>());
+        break;
       default:
         break;
     }
@@ -39,6 +45,9 @@ void classTreeItemCommon::setValue(const qvariant& value) {
     case QMetaType::Int:
       *(int*)(val_.value<void*>()) = value.toInt();
       break;
+    case QMetaType::LongLong:
+      *(int64_t*)(val_.value<void*>()) = value.toInt();
+      break;
     case QMetaType::Double:
       *(double*)(val_.value<void*>()) = value.toDouble();
       break;
@@ -47,6 +56,9 @@ void classTreeItemCommon::setValue(const qvariant& value) {
       break;
     case QMetaType::Bool:
       *(bool*)(val_.value<void*>()) = value.toBool();
+      break;
+    case QMetaType::Char:
+      *(char*)(val_.value<void*>()) = value.toChar().toLatin1();
       break;
     case QMetaType::QString:
       *(std::string*)(val_.value<void*>()) = value.toString().toStdString();

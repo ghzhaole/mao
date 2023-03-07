@@ -10,7 +10,7 @@ class classPropertyEditor;
 }
 QT_END_NAMESPACE
 class classPropertyEditor : public QWidget {
- Q_OBJECT
+  Q_OBJECT
  public:
   classPropertyEditor(QWidget *parent = nullptr);
 

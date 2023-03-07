@@ -10,6 +10,7 @@
 
 #include "class_tree_item.h"
 #include "class_tree_item_common.h"
+#include "class_tree_item_const.h"
 
 namespace mao::propertyEditor {
 classTreeModel::classTreeModel(QObject *parent) : QAbstractItemModel(parent) {
@@ -70,7 +71,7 @@ QVariant classTreeModel::data(const QModelIndex &index, int role) const {
     case Qt::BackgroundRole:
       if (item->isRoot())
         return QApplication::palette("QTreeView")
-            .brush(QPalette::Normal, QPalette::Button)
+            .brush(QPalette::Normal, QPalette::Window)
             .color();
       break;
   }
@@ -132,71 +133,146 @@ void classTreeModel::addItem(shared_ptr<maoMetaObject> propertyObject,
       root ? root : root_);
   for (size_t field_idx = 0; field_idx < field_count; ++field_idx) {
     auto field = propertyObject->get_field(field_idx);
-    auto field_type = field->type();
-    bool is_array = field->is_list();
-    if (!is_array) {
-      if (field_type == "int" || field_type == "float" ||
-          field_type == "double" || field_type == "bool" ||
-          field_type == "string") {
+    auto field_type = field->type().type();
+    switch (field_type) {
+      case maoMetaType::TYPE_INT:
+      case maoMetaType::TYPE_INT64:
+      case maoMetaType::TYPE_FLOAT:
+      case maoMetaType::TYPE_DOUBLE:
+      case maoMetaType::TYPE_BOOL:
+      case maoMetaType::TYPE_STRING:
+      case maoMetaType::TYPE_CHAR:
         new classTreeItem(QString::fromStdString(field->name()), propertyObject,
                           propertyItem);
-      } else {
-        shared_ptr<maoMetaObject> val;
-        field->get(propertyObject, val);
+        break;
+      case maoMetaType::TYPE_OBJECT: {
+        auto val = *field->get<shared_ptr<maoMetaObject>>(propertyObject);
+        if (!val) {
+          val = reflection::classFactory::instance()->create_class(
+              field->type().object_type_name());
+        }
         if (val) {
           addItem(val, propertyItem);
         }
+        break;
       }
-    } else {
-      auto sub_field_type = field->sub_type();
-      if (sub_field_type == "int") {
-        size_t array_size = field->size<int>(propertyObject);
-        for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
-          int *val = field->get<int>(propertyObject, array_idx);
-          new classTreeItemCommon(QString::fromStdString(field->name()),
-                                  (void *)val, QMetaType::Int, propertyItem);
-        }
-      } else if (sub_field_type == "float") {
-        size_t array_size = field->size<float>(propertyObject);
-        for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
-          float *val = field->get<float>(propertyObject, array_idx);
-          new classTreeItemCommon(QString::fromStdString(field->name()),
-                                  (void *)val, QMetaType::Float, propertyItem);
-        }
-      } else if (sub_field_type == "double") {
-        size_t array_size = field->size<double>(propertyObject);
-        for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
-          double *val = field->get<double>(propertyObject, array_idx);
-          new classTreeItemCommon(QString::fromStdString(field->name()),
-                                  (void *)val, QMetaType::Double, propertyItem);
-        }
-      } else if (sub_field_type == "bool") {
-        size_t array_size = field->size<bool>(propertyObject);
-        for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
-          bool *val = field->get<bool>(propertyObject, array_idx);
-          new classTreeItemCommon(QString::fromStdString(field->name()),
-                                  (void *)val, QMetaType::Bool, propertyItem);
-        }
-      } else if (sub_field_type == "string") {
-        size_t array_size = field->size<bool>(propertyObject);
-        for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
-          std::string *val = field->get<std::string>(propertyObject, array_idx);
-          new classTreeItemCommon(QString::fromStdString(field->name()),
-                                  (void *)val, QMetaType::QString,
-                                  propertyItem);
-        }
-      } else {
-        size_t array_size =
-            field->size<std::shared_ptr<maoMetaObject>>(propertyObject);
+      case maoMetaType::TYPE_LIST: {
         classTreeItem *row_item = new classTreeItem(
             QString::fromStdString(field->name()), 0, propertyItem);
-        for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
-          std::shared_ptr<maoMetaObject> subObj;
-          field->get(propertyObject, array_idx, subObj);
-          if (subObj) {
-            addItem(subObj, row_item);
+        auto field_sub_type = field->sub_type().type();
+        switch (field_sub_type) {
+          case maoMetaType::TYPE_INT: {
+            size_t array_size = field->size<int>(propertyObject);
+            for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
+              int *val = field->get<int>(propertyObject, array_idx);
+              new classTreeItemCommon(QString("[%1]").arg(array_idx),
+                                      (void *)val, QMetaType::Int, row_item);
+            }
+            break;
+          }
+          case maoMetaType::TYPE_INT64: {
+            size_t array_size = field->size<int64_t>(propertyObject);
+            for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
+              int64_t *val = field->get<int64_t>(propertyObject, array_idx);
+              new classTreeItemCommon(QString::fromStdString(field->name()),
+                                      (void *)val, QMetaType::LongLong,
+                                      row_item);
+            }
+            break;
+          }
+          case maoMetaType::TYPE_FLOAT: {
+            size_t array_size = field->size<float>(propertyObject);
+            for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
+              float *val = field->get<float>(propertyObject, array_idx);
+              new classTreeItemCommon(QString::fromStdString(field->name()),
+                                      (void *)val, QMetaType::Float, row_item);
+            }
+            break;
+          }
+          case maoMetaType::TYPE_DOUBLE: {
+            size_t array_size = field->size<double>(propertyObject);
+            for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
+              double *val = field->get<double>(propertyObject, array_idx);
+              new classTreeItemCommon(QString::fromStdString(field->name()),
+                                      (void *)val, QMetaType::Double, row_item);
+            }
+            break;
+          }
+          case maoMetaType::TYPE_BOOL: {
+            size_t array_size = field->size<bool>(propertyObject);
+            for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
+              bool *val = field->get<bool>(propertyObject, array_idx);
+              new classTreeItemCommon(QString::fromStdString(field->name()),
+                                      (void *)val, QMetaType::Bool, row_item);
+            }
+            break;
+          }
+          case maoMetaType::TYPE_STRING: {
+            size_t array_size = field->size<string>(propertyObject);
+            for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
+              string *val = field->get<string>(propertyObject, array_idx);
+              new classTreeItemCommon(QString::fromStdString(field->name()),
+                                      (void *)val, QMetaType::QString,
+                                      row_item);
+            }
+            break;
+          }
+          case maoMetaType::TYPE_CHAR: {
+            size_t array_size = field->size<char>(propertyObject);
+            for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
+              char *val = field->get<char>(propertyObject, array_idx);
+              new classTreeItemCommon(QString::fromStdString(field->name()),
+                                      (void *)val, QMetaType::Char, row_item);
+            }
+            break;
+          }
+          case maoMetaType::TYPE_OBJECT: {
+            size_t array_size =
+                field->size<std::shared_ptr<maoMetaObject>>(propertyObject);
+            for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
+              std::shared_ptr<maoMetaObject> subObj =
+                  *field->get<std::shared_ptr<maoMetaObject>>(propertyObject,
+                                                              array_idx);
+              if (!subObj) {
+                subObj = reflection::classFactory::instance()->create_class(
+                    field->sub_type().object_type_name());
+              }
+              if (subObj) {
+                addItem(subObj, row_item);
+              }
+            }
+            break;
           }
         }
+        break;
+      }
+      case maoMetaType::TYPE_MAP: {
+        classTreeItem *row_item = new classTreeItem(
+            QString::fromStdString(field->name()), 0, propertyItem);
+        auto field_sub_type = field->sub_type().type();
+        switch (field_sub_type) {
+          case maoMetaType::TYPE_INT: {
+            auto map_val = field->get<map<string, int>>(propertyObject);
+            for (auto item : *map_val) {
+              const string *key_val = &item.first;
+              int *val_val = &((*map_val)[item.first]);
+              new classTreeItemCommon(QString("value"), (void *)val_val,
+                                      QMetaType::Int, row_item);
+            }
+            break;
+          }
+          case maoMetaType::TYPE_STRING: {
+            auto map_val = field->get<map<string, string>>(propertyObject);
+            for (auto item : *map_val) {
+              string *val_val = &((*map_val)[item.first]);
+              new classTreeItemCommon(QString::fromStdString(item.first),
+                                      (void *)val_val, QMetaType::QString,
+                                      row_item);
+            }
+            break;
+          }
+        }
+        break;
       }
     }
   }

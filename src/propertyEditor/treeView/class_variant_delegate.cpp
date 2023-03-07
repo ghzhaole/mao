@@ -23,9 +23,11 @@ QWidget* classVariantDelegate::createEditor(QWidget* parent,
   classTreeItem* p = static_cast<classTreeItem*>(index.internalPointer());
   switch (p->value().type()) {
     case QVariant::Int:
+    case QVariant::LongLong:
     case QMetaType::Float:
     case QVariant::Double:
     case QVariant::Bool:
+    case QVariant::Char:
     case QVariant::String:
       editor = p->createEditor(parent, option);
       if (editor) {
@@ -52,6 +54,8 @@ void classVariantDelegate::setEditorData(QWidget* editor,
     case QMetaType::Float:
     case QVariant::Bool:
     case QVariant::Int:
+    case QVariant::LongLong:
+    case QVariant::Char:
     case QVariant::String:
       if (static_cast<classTreeItem*>(index.internalPointer())
               ->setEditorData(
@@ -73,6 +77,8 @@ void classVariantDelegate::setModelData(QWidget* editor,
     case QMetaType::Float:
     case QVariant::Bool:
     case QVariant::Int:
+    case QVariant::LongLong:
+    case QVariant::Char:
     case QVariant::String: {
       QVariant data = static_cast<classTreeItem*>(index.internalPointer())
                           ->editorData(editor);

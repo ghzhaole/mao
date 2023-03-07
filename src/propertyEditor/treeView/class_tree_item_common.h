@@ -4,6 +4,7 @@
 
 namespace mao::propertyEditor {
 class classTreeItemCommon : public classTreeItem {
+  Q_OBJECT
  public:
   classTreeItemCommon(const qstring& name = QString(),
                       void* propertyObject = nullptr,
@@ -17,7 +18,7 @@ class classTreeItemCommon : public classTreeItem {
   qvariant property_Object() { return val_; }
 
   virtual bool isRoot() {
-    if (val_.isValid()) return true;
+    if (!val_.isValid()) return true;
     return false;
   }
 

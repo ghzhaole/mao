@@ -16,18 +16,9 @@ struct point : public mao::reflection::metaObject {
   float x{0}, y{0};
 };
 
-struct pointTable : public mao::reflection::metaObject {
-  std::vector<std::shared_ptr<point>> points;
-};
-
 struct child : public parent {
  public:
-  int j{1};
-  int c{10};
-  float k{2.1f};
-  double l{3.7};
-  bool b{true};
-  std::string s{"1233434"};
-  std::vector<std::shared_ptr<point>> points;
+  std::vector<int> points;
+  std::map<std::string, std::string> pointsm;
 };
 #endif  // MAO_TEST_STRUCT_H
