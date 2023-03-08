@@ -5,11 +5,13 @@
 
 REGISTER_CLASS(parent)
 REGISTER_CLASS_FIELD(parent, i, int)
+REGISTER_CLASS_FIELD(parent, k, int)
 
 REGISTER_CLASS(point)
 REGISTER_CLASS_FIELD(point, x, float)
 REGISTER_CLASS_FIELD(point, y, float)
 
 REGISTER_CLASS_WITH_INHERIT(child, parent)
-REGISTER_CLASS_FIELD_1(child, points, vector, int)
-REGISTER_CLASS_FIELD_1(child, pointsm, map, string)
+REGISTER_CLASS_FIELD_1(child, ps, vector, point)
+REGISTER_CLASS_FIELD_1(child, vi, vector, int)
+REGISTER_CLASS_FIELD_1(child, mi, map, int)

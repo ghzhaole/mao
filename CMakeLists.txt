@@ -1,15 +1,27 @@
 # -DCMAKE_HOST_SYSTEM_PROCESSOR=x86_64 -DCMAKE_SYSTEM_PROCESSOR=x86_64 set(CMAKE_OSX_ARCHITECTURES "x86_64")
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.18)
 project(mao)
 
-set(CMAKE_CXX_STANDARD 23)
-
-set(CMAKE_HOST_SYSTEM_PROCESSOR "x86_64")
-set(CMAKE_SYSTEM_PROCESSOR "x86_64")
-set(CMAKE_OSX_ARCHITECTURES "x86_64")
+set(CMAKE_CXX_STANDARD 20)
 
 # 设置调试版本后缀
 set(CMAKE_DEBUG_POSTFIX "_d")
+
+if(CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
+    message("++++ current platform: Linux ")
+    add_definitions(-DLINUX)
+elseif(CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
+    message("++++ current platform: Windows ")
+    add_definitions(-DWINDOWS)
+elseif(CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
+    message("++++ current platform: Darwin ")
+    add_definitions(-DDARWIN)
+    set(CMAKE_OSX_ARCHITECTURES "x86_64")
+    set(CMAKE_HOST_SYSTEM_PROCESSOR "x86_64")
+    set(CMAKE_SYSTEM_PROCESSOR "x86_64")
+else()
+    message(FATAL_ERROR "++++ current platform: unkown ")
+endif()
 
 # 设置路径
 set(THIRD_PARTY ${CMAKE_SOURCE_DIR}/3rd_party)

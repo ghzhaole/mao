@@ -12,7 +12,7 @@ classTreeWdiget::classTreeWdiget(QWidget *parent) : QTreeView(parent) {
 }
 
 void classTreeWdiget::addObject(shared_ptr<maoMetaObject> propertyObject) {
-  model_->addItem(propertyObject);
+  model_->addItem(QString(), propertyObject);
   expandToDepth(0);
 }
 }  // namespace mao::propertyEditor

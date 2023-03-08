@@ -2,9 +2,10 @@
 // Created by leo on 2023/3/1.
 //
 
-#ifndef WIN32
 
 #include "class_library_loader.h"
+
+#ifdef DARWIN
 
 #include <dlfcn.h>
 #include <stdio.h>
@@ -33,14 +34,12 @@ void classLibraryLoader::Free() {
 }
 }  // namespace mao::library
 
-#else
+#endif
+#ifdef WINDOWS
 
 #include <windows.h>
-
 #include <codecvt>
 #include <locale>
-
-#include "class_library_loader.h"
 
 namespace mao::library {
 classLibraryLoader::classLibraryLoader() { libraryHandle_ = nullptr; }
@@ -59,6 +58,36 @@ bool classLibraryLoader::Load(std::string str_utf8_dllfilepath) {
 void classLibraryLoader::Free() {
   if (libraryHandle_ != nullptr) {
     ::FreeLibrary((HMODULE)libraryHandle_);
+    libraryHandle_ = nullptr;
+  }
+}
+}  // namespace mao::library
+
+#endif
+#ifdef LINUX
+
+#include <dlfcn.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+namespace mao::library {
+classLibraryLoader::classLibraryLoader() { libraryHandle_ = nullptr; }
+
+classLibraryLoader::~classLibraryLoader() { Free(); }
+
+bool classLibraryLoader::Load(std::string str_utf8_dllfilepath) {
+  libraryHandle_ = dlopen(str_utf8_dllfilepath.c_str(), RTLD_LOCAL | RTLD_LAZY);
+  if (!libraryHandle_) {
+    printf("error msg:%s", dlerror());
+    return false;
+  }
+  return true;
+}
+
+void classLibraryLoader::Free() {
+  if (libraryHandle_ != nullptr) {
+    dlclose(libraryHandle_);
     libraryHandle_ = nullptr;
   }
 }

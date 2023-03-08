@@ -29,6 +29,10 @@ class classTreeItem : public QObject {
                 shared_ptr<maoMetaObject> propertyObject = nullptr,
                 QObject *parent = 0);
 
+  classTreeItem(const qstring &objectName = QString(),const qstring &fieldName = QString(),
+                shared_ptr<maoMetaObject> propertyObject = nullptr,
+                QObject *parent = 0);
+
   virtual qvariant value(int role = Qt::UserRole) const;
 
   virtual void setValue(const qvariant &value);
@@ -61,6 +65,8 @@ class classTreeItem : public QObject {
 
  private:
   shared_ptr<maoMetaObject> property_obj_;
+
+  qstring field_name_;
 
   qstring hints_;
 };

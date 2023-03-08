@@ -13,13 +13,20 @@ namespace mao::propertyEditor {
 classTreeItem::classTreeItem(const qstring &name,
                              shared_ptr<maoMetaObject> propertyObject,
                              QObject *parent)
-    : QObject(parent), property_obj_(propertyObject) {
+    : QObject(parent), property_obj_(propertyObject),field_name_(name) {
   setObjectName(name);
+}
+
+classTreeItem::classTreeItem(const qstring &objectName,
+							 const qstring &fieldName,
+							 shared_ptr<maoMetaObject> propertyObject,
+							 QObject *parent):field_name_(fieldName) {
+  setObjectName(objectName);
 }
 
 qvariant classTreeItem::value(int role) const {
   if (property_obj_) {
-    auto field = property_obj_->get_field(objectName().toStdString());
+    auto field = property_obj_->get_field(field_name_.toStdString());
     if (field) {
       auto field_type = field->type().type();
       switch (field_type) {
@@ -46,7 +53,7 @@ qvariant classTreeItem::value(int role) const {
 
 void classTreeItem::setValue(const qvariant &value) {
   if (property_obj_) {
-    auto field = property_obj_->get_field(objectName().toStdString());
+    auto field = property_obj_->get_field(field_name_.toStdString());
     if (field) {
       auto field_type = field->type().type();
       switch (field_type) {

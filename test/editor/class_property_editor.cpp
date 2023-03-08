@@ -25,12 +25,13 @@ classPropertyEditor::classPropertyEditor(QWidget *parent)
   auto p3 = classFactory::instance()->create_class("point");
   p3->set("x", 4.f);
   p3->set("y", 6.f);
-  obj_->set("points", 0, 3);
+  obj_->set("ps", 0, p3);
   auto p4 = classFactory::instance()->create_class("point");
   p4->set("x", 8.f);
   p4->set("y", 9.f);
-  obj_->set("points", 1, 4);
-  obj_->set<string>("pointsm", "12", "11");
+  obj_->set("ps", 1, p4);
+  obj_->set("mi", "first", 11);
+  obj_->set("mi", "second", 12);
   ui->treeWidget->addObject(obj_);
 }
 

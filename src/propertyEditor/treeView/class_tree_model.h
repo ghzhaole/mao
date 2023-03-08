@@ -53,7 +53,7 @@ class classTreeModel : public QAbstractItemModel {
 
   //}
 
-  void addItem(shared_ptr<maoMetaObject> propertyObject,
+  void addItem(const QString& name,shared_ptr<maoMetaObject> propertyObject,
                classTreeItem *root = nullptr);
 
   void clear();

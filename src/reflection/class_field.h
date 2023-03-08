@@ -125,7 +125,6 @@ class MAO_REFLECTION_EXPORTS classField {
 
   template <class T>
   void set(const std::shared_ptr<metaObject> &objPtr, const T &value) {
-    std::cout << value << std::endl;
     *((T *)((unsigned char *)(objPtr.get()) + offset_)) = value;
   }
 
