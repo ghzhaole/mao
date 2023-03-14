@@ -15,8 +15,7 @@ using namespace mao::reflection;
 classPropertyEditor::classPropertyEditor(QWidget *parent)
     : QWidget(parent), ui(new Ui::classPropertyEditor) {
   ui->setupUi(this);
-  std::string dllfilepath =
-      "/Users/leo/git/mao/bin/Debug/lib/libmao_data_d.dylib";
+  std::string dllfilepath = R"(mao_data_d.dll)";
   auto ptr_shared_library_ = new classLibraryLoader();
   if (ptr_shared_library_->Load(dllfilepath) == false) {
     return;

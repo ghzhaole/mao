@@ -9,6 +9,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${SOURCE_DIR})
 target_link_libraries(${PROJECT_NAME} mao_library)
 target_link_libraries(${PROJECT_NAME} mao_serialization)
 target_link_libraries(${PROJECT_NAME} mao_reflection)
+target_link_libraries(${PROJECT_NAME} mao_json)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
                       ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}

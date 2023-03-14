@@ -1,7 +1,7 @@
 
 project(mao_property_tree VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_PREFIX_PATH "/Users/leo/Qt/5.15.2/clang_64")
+set(CMAKE_PREFIX_PATH "C:/Qt/Qt5.14.2/5.14.2/msvc2017_64")
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

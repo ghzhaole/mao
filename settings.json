@@ -1,8 +1,0 @@
-{
-<<<<<<< HEAD
-    "editor.formatOnSave": true,
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
-=======
-    "editor.formatOnSave": true
->>>>>>> 262ddcbbca6926d72b9cf9ee8637e1624fccf879
-}

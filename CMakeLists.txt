@@ -2,7 +2,11 @@
 cmake_minimum_required(VERSION 3.18)
 project(mao)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
+
+if(NOT CMAKE_BUILD_TYPE)
+set(CMAKE_BUILD_TYPE Release)
+endif()
 
 # 设置调试版本后缀
 set(CMAKE_DEBUG_POSTFIX "_d")
@@ -44,3 +48,4 @@ message("++++ Set Lib Install Out Dir: ${CMAKE_INSTALL_LIBDIR}")
 
 add_subdirectory(src)
 add_subdirectory(test)
+
