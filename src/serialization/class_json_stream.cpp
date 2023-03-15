@@ -12,20 +12,17 @@
 using namespace rapidjson;
 namespace mao::serialization {
 void write(const std::shared_ptr<metaObject> &objPtr,
-           PrettyWriter<StringBuffer> &writer, classField *field,
+           PrettyWriter<StringBuffer> &writer,
+           classField *field,
            bool isContainer);
 
-void write(const std::shared_ptr<metaObject> &objPtr,
-           PrettyWriter<StringBuffer> &writer, classField *field);
+void write(const std::shared_ptr<metaObject> &objPtr, PrettyWriter<StringBuffer> &writer, classField *field);
 
-void write(const std::shared_ptr<metaObject> &objPtr,
-           PrettyWriter<StringBuffer> &writer);
+void write(const std::shared_ptr<metaObject> &objPtr, PrettyWriter<StringBuffer> &writer);
 
-void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
-          classField *field, bool isContainer);
+void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj, classField *field, bool isContainer);
 
-void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
-          classField *field);
+void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj, classField *field);
 
 void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj);
 
@@ -47,43 +44,34 @@ std::shared_ptr<metaObject> classJsonStream::from_json(const string &jsonStr) {
   return objPtr;
 }
 
-void write(const std::shared_ptr<metaObject> &objPtr,
-           PrettyWriter<StringBuffer> &writer, classField *field) {
+void write(const std::shared_ptr<metaObject> &objPtr, PrettyWriter<StringBuffer> &writer, classField *field) {
   auto field_type = field->type().type();
   switch (field_type) {
-    case metaTypes::TYPE_INT:
-      writer.Int(*field->get<int>(objPtr));
+    case metaTypes::TYPE_INT:writer.Int(*field->get<int>(objPtr));
       break;
-    case metaTypes::TYPE_INT64:
-      writer.Int64(*field->get<int64_t>(objPtr));
+    case metaTypes::TYPE_INT64:writer.Int64(*field->get<int64_t>(objPtr));
       break;
-    case metaTypes::TYPE_FLOAT:
-      writer.Double(*field->get<float>(objPtr));
+    case metaTypes::TYPE_FLOAT:writer.Double(*field->get<float>(objPtr));
       break;
-    case metaTypes::TYPE_DOUBLE:
-      writer.Double(*field->get<double>(objPtr));
+    case metaTypes::TYPE_DOUBLE:writer.Double(*field->get<double>(objPtr));
       break;
-    case metaTypes::TYPE_BOOL:
-      writer.Bool(*field->get<bool>(objPtr));
+    case metaTypes::TYPE_BOOL:writer.Bool(*field->get<bool>(objPtr));
       break;
-    case metaTypes::TYPE_STRING:
-      writer.String(*field->get<string>(objPtr));
+    case metaTypes::TYPE_STRING:writer.String(*field->get<string>(objPtr));
       break;
-    case metaTypes::TYPE_CHAR:
-      writer.String(std::string(1, *field->get<char>(objPtr)));
+    case metaTypes::TYPE_CHAR:writer.String(std::string(1, *field->get<char>(objPtr)));
       break;
-    case metaTypes::TYPE_OBJECT:
-      write(*field->get<std::shared_ptr<metaObject>>(objPtr), writer);
+    case metaTypes::TYPE_OBJECT:write(*field->get<std::shared_ptr<metaObject>>(objPtr), writer);
       break;
     case metaTypes::TYPE_LIST:
-    case metaTypes::TYPE_MAP:
-      write(objPtr, writer, field, true);
+    case metaTypes::TYPE_MAP:write(objPtr, writer, field, true);
       break;
   }
 }
 
 void write(const std::shared_ptr<metaObject> &objPtr,
-           PrettyWriter<StringBuffer> &writer, classField *field,
+           PrettyWriter<StringBuffer> &writer,
+           classField *field,
            bool isContainer) {
   if (field->is_list()) {
     writer.StartArray();
@@ -243,8 +231,7 @@ void write(const std::shared_ptr<metaObject> &objPtr,
   }
 }
 
-void write(const std::shared_ptr<metaObject> &objPtr,
-           PrettyWriter<StringBuffer> &writer) {
+void write(const std::shared_ptr<metaObject> &objPtr, PrettyWriter<StringBuffer> &writer) {
   writer.StartObject();
   if (!objPtr) {
     writer.EndObject();
@@ -268,31 +255,24 @@ void write(const std::shared_ptr<metaObject> &objPtr,
   writer.EndObject();
 }
 
-void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
-          classField *field) {
+void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj, classField *field) {
   auto ret = jsonObj.FindMember(field->name().data());
   if (ret == jsonObj.MemberEnd()) {
     return;
   }
   auto field_type = field->type().type();
   switch (field_type) {
-    case metaTypes::TYPE_INT:
-      field->set(objPtr, ret->value.GetInt());
+    case metaTypes::TYPE_INT:field->set(objPtr, ret->value.GetInt());
       break;
-    case metaTypes::TYPE_INT64:
-      field->set(objPtr, ret->value.GetInt64());
+    case metaTypes::TYPE_INT64:field->set(objPtr, ret->value.GetInt64());
       break;
-    case metaTypes::TYPE_FLOAT:
-      field->set(objPtr, ret->value.GetFloat());
+    case metaTypes::TYPE_FLOAT:field->set(objPtr, ret->value.GetFloat());
       break;
-    case metaTypes::TYPE_DOUBLE:
-      field->set(objPtr, ret->value.GetDouble());
+    case metaTypes::TYPE_DOUBLE:field->set(objPtr, ret->value.GetDouble());
       break;
-    case metaTypes::TYPE_BOOL:
-      field->set(objPtr, ret->value.GetBool());
+    case metaTypes::TYPE_BOOL:field->set(objPtr, ret->value.GetBool());
       break;
-    case metaTypes::TYPE_STRING:
-      field->set(objPtr, std::string(ret->value.GetString()));
+    case metaTypes::TYPE_STRING:field->set(objPtr, std::string(ret->value.GetString()));
       break;
     case metaTypes::TYPE_CHAR: {
       string val = ret->value.GetString();
@@ -309,13 +289,11 @@ void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
       field->set(objPtr, subObj);
     }
     case metaTypes::TYPE_MAP:
-    case metaTypes::TYPE_LIST:
-      read(objPtr, ret->value, field, true);
+    case metaTypes::TYPE_LIST:read(objPtr, ret->value, field, true);
   }
 }
 
-void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
-          classField *field, bool isContainer) {
+void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj, classField *field, bool isContainer) {
   auto sub_field_type = field->sub_type().type();
   if (field->is_list()) {
     switch (sub_field_type) {
@@ -381,12 +359,9 @@ void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
         for (SizeType i = 0; i < jsonObj.Size(); ++i) {
           auto &json_index_value = jsonObj[i];
           Value::MemberIterator key_itr = json_index_value.FindMember("key");
-          Value::MemberIterator value_itr =
-              json_index_value.FindMember("value");
-          if (key_itr != json_index_value.MemberEnd() &&
-              value_itr != json_index_value.MemberEnd()) {
-            field->set(objPtr, key_itr->value.GetString(),
-                       value_itr->value.GetInt());
+          Value::MemberIterator value_itr = json_index_value.FindMember("value");
+          if (key_itr != json_index_value.MemberEnd() && value_itr != json_index_value.MemberEnd()) {
+            field->set(objPtr, key_itr->value.GetString(), value_itr->value.GetInt());
           }
         }
         break;
@@ -394,12 +369,9 @@ void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
         for (SizeType i = 0; i < jsonObj.Size(); ++i) {
           auto &json_index_value = jsonObj[i];
           Value::MemberIterator key_itr = json_index_value.FindMember("key");
-          Value::MemberIterator value_itr =
-              json_index_value.FindMember("value");
-          if (key_itr != json_index_value.MemberEnd() &&
-              value_itr != json_index_value.MemberEnd()) {
-            field->set(objPtr, key_itr->value.GetString(),
-                       value_itr->value.GetInt64());
+          Value::MemberIterator value_itr = json_index_value.FindMember("value");
+          if (key_itr != json_index_value.MemberEnd() && value_itr != json_index_value.MemberEnd()) {
+            field->set(objPtr, key_itr->value.GetString(), value_itr->value.GetInt64());
           }
         }
         break;
@@ -407,12 +379,9 @@ void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
         for (SizeType i = 0; i < jsonObj.Size(); ++i) {
           auto &json_index_value = jsonObj[i];
           Value::MemberIterator key_itr = json_index_value.FindMember("key");
-          Value::MemberIterator value_itr =
-              json_index_value.FindMember("value");
-          if (key_itr != json_index_value.MemberEnd() &&
-              value_itr != json_index_value.MemberEnd()) {
-            field->set(objPtr, key_itr->value.GetString(),
-                       value_itr->value.GetFloat());
+          Value::MemberIterator value_itr = json_index_value.FindMember("value");
+          if (key_itr != json_index_value.MemberEnd() && value_itr != json_index_value.MemberEnd()) {
+            field->set(objPtr, key_itr->value.GetString(), value_itr->value.GetFloat());
           }
         }
         break;
@@ -420,12 +389,9 @@ void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
         for (SizeType i = 0; i < jsonObj.Size(); ++i) {
           auto &json_index_value = jsonObj[i];
           Value::MemberIterator key_itr = json_index_value.FindMember("key");
-          Value::MemberIterator value_itr =
-              json_index_value.FindMember("value");
-          if (key_itr != json_index_value.MemberEnd() &&
-              value_itr != json_index_value.MemberEnd()) {
-            field->set(objPtr, key_itr->value.GetString(),
-                       value_itr->value.GetDouble());
+          Value::MemberIterator value_itr = json_index_value.FindMember("value");
+          if (key_itr != json_index_value.MemberEnd() && value_itr != json_index_value.MemberEnd()) {
+            field->set(objPtr, key_itr->value.GetString(), value_itr->value.GetDouble());
           }
         }
         break;
@@ -433,12 +399,9 @@ void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
         for (SizeType i = 0; i < jsonObj.Size(); ++i) {
           auto &json_index_value = jsonObj[i];
           Value::MemberIterator key_itr = json_index_value.FindMember("key");
-          Value::MemberIterator value_itr =
-              json_index_value.FindMember("value");
-          if (key_itr != json_index_value.MemberEnd() &&
-              value_itr != json_index_value.MemberEnd()) {
-            field->set(objPtr, key_itr->value.GetString(),
-                       value_itr->value.GetBool());
+          Value::MemberIterator value_itr = json_index_value.FindMember("value");
+          if (key_itr != json_index_value.MemberEnd() && value_itr != json_index_value.MemberEnd()) {
+            field->set(objPtr, key_itr->value.GetString(), value_itr->value.GetBool());
           }
         }
         break;
@@ -446,12 +409,9 @@ void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
         for (SizeType i = 0; i < jsonObj.Size(); ++i) {
           auto &json_index_value = jsonObj[i];
           Value::MemberIterator key_itr = json_index_value.FindMember("key");
-          Value::MemberIterator value_itr =
-              json_index_value.FindMember("value");
-          if (key_itr != json_index_value.MemberEnd() &&
-              value_itr != json_index_value.MemberEnd()) {
-            field->set(objPtr, key_itr->value.GetString(),
-                       value_itr->value.GetString());
+          Value::MemberIterator value_itr = json_index_value.FindMember("value");
+          if (key_itr != json_index_value.MemberEnd() && value_itr != json_index_value.MemberEnd()) {
+            field->set(objPtr, key_itr->value.GetString(), value_itr->value.GetString());
           }
         }
         break;
@@ -459,10 +419,8 @@ void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
         for (SizeType i = 0; i < jsonObj.Size(); ++i) {
           auto &json_index_value = jsonObj[i];
           Value::MemberIterator key_itr = json_index_value.FindMember("key");
-          Value::MemberIterator value_itr =
-              json_index_value.FindMember("value");
-          if (key_itr != json_index_value.MemberEnd() &&
-              value_itr != json_index_value.MemberEnd()) {
+          Value::MemberIterator value_itr = json_index_value.FindMember("value");
+          if (key_itr != json_index_value.MemberEnd() && value_itr != json_index_value.MemberEnd()) {
             std::string s = value_itr->value.GetString();
             char c = s.size() > 0 ? s[0] : '\0';
             field->set(objPtr, key_itr->value.GetString(), c);
@@ -473,10 +431,8 @@ void read(std::shared_ptr<metaObject> &objPtr, Value &jsonObj,
         for (SizeType i = 0; i < jsonObj.Size(); ++i) {
           auto &json_index_value = jsonObj[i];
           Value::MemberIterator key_itr = json_index_value.FindMember("key");
-          Value::MemberIterator value_itr =
-              json_index_value.FindMember("value");
-          if (key_itr != json_index_value.MemberEnd() &&
-              value_itr != json_index_value.MemberEnd()) {
+          Value::MemberIterator value_itr = json_index_value.FindMember("value");
+          if (key_itr != json_index_value.MemberEnd() && value_itr != json_index_value.MemberEnd()) {
             std::shared_ptr<metaObject> subObj;
             read(subObj, value_itr->value);
             field->set(objPtr, key_itr->value.GetString(), subObj);

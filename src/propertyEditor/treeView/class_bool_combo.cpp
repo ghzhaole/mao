@@ -5,11 +5,9 @@
 #include "class_bool_combo.h"
 
 namespace mao::propertyEditor {
-classBoolCombo::classBoolCombo(QWidget *parent)
-    : QComboBox(parent), bool_list_({"true", "false"}) {
+classBoolCombo::classBoolCombo(QWidget *parent) : QComboBox(parent), bool_list_({"true", "false"}) {
   addItems(bool_list_);
-  connect(this, SIGNAL(currentIndexChanged(int)), this,
-          SLOT(currentChanged(int)));
+  connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(currentChanged(int)));
 }
 
 classBoolCombo::~classBoolCombo() {}

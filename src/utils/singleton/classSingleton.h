@@ -8,7 +8,7 @@
 #include <memory>
 
 namespace mao::singleton {
-template <typename T>
+template<typename T>
 class classSingleton {
  public:
   static T *instance() {

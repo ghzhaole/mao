@@ -4,16 +4,16 @@
 
 namespace mao::propertyEditor {
 class classTreeItemCommon : public classTreeItem {
-  Q_OBJECT
+ Q_OBJECT
  public:
-  classTreeItemCommon(const qstring& name = QString(),
-                      void* propertyObject = nullptr,
+  classTreeItemCommon(const qstring &name = QString(),
+                      void *propertyObject = nullptr,
                       QMetaType::Type type = QMetaType::Nullptr,
-                      QObject* parent = 0);
+                      QObject *parent = 0);
 
   virtual qvariant value(int role = Qt::UserRole) const;
 
-  virtual void setValue(const qvariant& value);
+  virtual void setValue(const qvariant &value);
 
   qvariant property_Object() { return val_; }
 
@@ -24,6 +24,7 @@ class classTreeItemCommon : public classTreeItem {
 
  private:
   qvariant val_;
+
   QMetaType::Type type_;
 };
 

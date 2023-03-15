@@ -3,24 +3,20 @@
 //
 
 #include "class_tree_item.h"
-
 #include <QLineEdit>
 #include <QSpinBox>
-
 #include "class_bool_combo.h"
 
 namespace mao::propertyEditor {
-classTreeItem::classTreeItem(const qstring &name,
-                             shared_ptr<maoMetaObject> propertyObject,
-                             QObject *parent)
-    : QObject(parent), property_obj_(propertyObject),field_name_(name) {
+classTreeItem::classTreeItem(const qstring &name, shared_ptr<maoMetaObject> propertyObject, QObject *parent) : QObject(
+    parent), property_obj_(propertyObject), field_name_(name) {
   setObjectName(name);
 }
 
 classTreeItem::classTreeItem(const qstring &objectName,
-							 const qstring &fieldName,
-							 shared_ptr<maoMetaObject> propertyObject,
-							 QObject *parent):field_name_(fieldName) {
+                             const qstring &fieldName,
+                             shared_ptr<maoMetaObject> propertyObject,
+                             QObject *parent) : field_name_(fieldName) {
   setObjectName(objectName);
 }
 
@@ -30,21 +26,13 @@ qvariant classTreeItem::value(int role) const {
     if (field) {
       auto field_type = field->type().type();
       switch (field_type) {
-        case maoMetaType::TYPE_INT:
-          return QVariant(*field->get<int>(property_obj_));
-        case maoMetaType::TYPE_INT64:
-          return QVariant(*field->get<int64_t>(property_obj_));
-        case maoMetaType::TYPE_FLOAT:
-          return QVariant(*field->get<float>(property_obj_));
-        case maoMetaType::TYPE_DOUBLE:
-          return QVariant(*field->get<double>(property_obj_));
-        case maoMetaType::TYPE_BOOL:
-          return QVariant(*field->get<bool>(property_obj_));
-        case maoMetaType::TYPE_STRING:
-          return QVariant(
-              QString::fromStdString(*field->get<string>(property_obj_)));
-        case maoMetaType::TYPE_CHAR:
-          return QVariant(*field->get<char>(property_obj_));
+        case maoMetaType::TYPE_INT:return QVariant(*field->get<int>(property_obj_));
+        case maoMetaType::TYPE_INT64:return QVariant(*field->get<int64_t>(property_obj_));
+        case maoMetaType::TYPE_FLOAT:return QVariant(*field->get<float>(property_obj_));
+        case maoMetaType::TYPE_DOUBLE:return QVariant(*field->get<double>(property_obj_));
+        case maoMetaType::TYPE_BOOL:return QVariant(*field->get<bool>(property_obj_));
+        case maoMetaType::TYPE_STRING: return QVariant(QString::fromStdString(*field->get<string>(property_obj_)));
+        case maoMetaType::TYPE_CHAR:return QVariant(*field->get<char>(property_obj_));
       }
     }
   }
@@ -57,23 +45,17 @@ void classTreeItem::setValue(const qvariant &value) {
     if (field) {
       auto field_type = field->type().type();
       switch (field_type) {
-        case maoMetaType::TYPE_INT:
-          field->set(property_obj_, value.toInt());
+        case maoMetaType::TYPE_INT:field->set(property_obj_, value.toInt());
           break;
-        case maoMetaType::TYPE_INT64:
-          field->set(property_obj_, value.toLongLong());
+        case maoMetaType::TYPE_INT64:field->set(property_obj_, value.toLongLong());
           break;
-        case maoMetaType::TYPE_FLOAT:
-          field->set(property_obj_, value.toFloat());
+        case maoMetaType::TYPE_FLOAT:field->set(property_obj_, value.toFloat());
           break;
-        case maoMetaType::TYPE_DOUBLE:
-          field->set(property_obj_, value.toDouble());
+        case maoMetaType::TYPE_DOUBLE:field->set(property_obj_, value.toDouble());
           break;
-        case maoMetaType::TYPE_BOOL:
-          field->set(property_obj_, value.toBool());
+        case maoMetaType::TYPE_BOOL:field->set(property_obj_, value.toBool());
           break;
-        case maoMetaType::TYPE_STRING:
-          field->set<string>(property_obj_, value.toString().toStdString());
+        case maoMetaType::TYPE_STRING:field->set<string>(property_obj_, value.toString().toStdString());
           break;
         case maoMetaType::TYPE_CHAR: {
           string s = value.toString().toStdString();
@@ -86,8 +68,7 @@ void classTreeItem::setValue(const qvariant &value) {
   }
 }
 
-QWidget *classTreeItem::createEditor(QWidget *parent,
-                                     const QStyleOptionViewItem &option) {
+QWidget *classTreeItem::createEditor(QWidget *parent, const QStyleOptionViewItem &option) {
   switch (value().type()) {
     case qvariant::Int: {
       auto editor = new QSpinBox(parent);
@@ -122,8 +103,7 @@ QWidget *classTreeItem::createEditor(QWidget *parent,
       return editor;
       break;
     }
-    default:
-      break;
+    default:break;
   }
   return nullptr;
 }
@@ -167,8 +147,7 @@ bool classTreeItem::setEditorData(QWidget *editor, const QVariant &data) {
       editor->blockSignals(false);
       return true;
     }
-    default:
-      break;
+    default:break;
   }
   return false;
 }
@@ -190,14 +169,12 @@ QVariant classTreeItem::editorData(QWidget *editor) {
     case qvariant::String: {
       return QVariant(static_cast<QLineEdit *>(editor)->text());
     }
-    default:
-      break;
+    default:break;
   }
   return QVariant();
 }
 
-classTreeItem *classTreeItem::findPropertyObject(
-    shared_ptr<maoMetaObject> propertyObject) {
+classTreeItem *classTreeItem::findPropertyObject(shared_ptr<maoMetaObject> propertyObject) {
   if (propertyObject) {
     return nullptr;
   }
@@ -206,8 +183,7 @@ classTreeItem *classTreeItem::findPropertyObject(
   }
   auto child_list = children();
   for (int idx = 0; idx < child_list.size(); ++idx) {
-    auto child = static_cast<classTreeItem *>(child_list[idx])
-                     ->findPropertyObject(propertyObject);
+    auto child = static_cast<classTreeItem *>(child_list[idx])->findPropertyObject(propertyObject);
     if (child) {
       return child;
     }

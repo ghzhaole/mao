@@ -6,9 +6,7 @@
 
 namespace mao {
 namespace propertyEditor {
-classTreeItemConst::classTreeItemConst(const qstring &name,
-                                       void *propertyObject,
-                                       QMetaType::Type type, QObject *parent)
+classTreeItemConst::classTreeItemConst(const qstring &name, void *propertyObject, QMetaType::Type type, QObject *parent)
     : classTreeItemCommon(name, propertyObject, type, parent) {}
 
 bool classTreeItemConst::isReadOnly() { return true; }

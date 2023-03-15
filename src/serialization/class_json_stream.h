@@ -8,7 +8,6 @@
 #include <iostream>
 #include <memory>
 #include <string>
-
 #include "export.h"
 #include "reflection/class_factory.h"
 

@@ -5,7 +5,6 @@
 #include <map>
 #include <string>
 #include <vector>
-
 #include "class_types.h"
 #include "export.h"
 
@@ -22,12 +21,10 @@ class MAO_REFLECTION_EXPORTS classField {
  public:
   classField() : offset_(0), name_(""), type_(), sub_type_() {}
 
-  classField(size_t offset, const string &name, const string &type,
-             const string &subType)
+  classField(size_t offset, const string &name, const string &type, const string &subType)
       : offset_(offset), name_(name), type_(type), sub_type_(subType) {}
 
-  classField(size_t offset, const string &name, const classTypes &type,
-             const classTypes &subType)
+  classField(size_t offset, const string &name, const classTypes &type, const classTypes &subType)
       : offset_(offset), name_(name), type_(type), sub_type_(subType) {}
 
   classField(size_t offset, const string &name, const string &type)
@@ -74,11 +71,9 @@ class MAO_REFLECTION_EXPORTS classField {
   }
 
   template <class T>
-  void get(const std::shared_ptr<metaObject> &objPtr, const string &key,
-           T &value) {
+  void get(const std::shared_ptr<metaObject> &objPtr, const string &key, T &value) {
     if (objPtr && is_map()) {
-      map<string, T> *val =
-          (map<string, T> *)((unsigned char *)(objPtr.get()) + offset_);
+      map < string, T > *val = (map<string, T> *)((unsigned char *)(objPtr.get()) + offset_);
       if (val->contains(key)) {
         value = (*val)[key];
       }
@@ -100,8 +95,7 @@ class MAO_REFLECTION_EXPORTS classField {
   template <class T>
   T *get(const std::shared_ptr<metaObject> &objPtr, const string &key) {
     if (objPtr && is_map()) {
-      map<string, T> *val =
-          (map<string, T> *)((unsigned char *)(objPtr.get()) + offset_);
+      map < string, T > *val = (map<string, T> *)((unsigned char *)(objPtr.get()) + offset_);
       if (val->contains(key)) {
         T *valPtr = &((*val)[key]);
         return valPtr;
@@ -113,8 +107,7 @@ class MAO_REFLECTION_EXPORTS classField {
   template <>
   bool *get(const std::shared_ptr<metaObject> &objPtr, size_t idx) {
     if (objPtr && is_list()) {
-      vector<char> *val =
-          (vector<char> *)((unsigned char *)(objPtr.get()) + offset_);
+      vector<char> *val = (vector<char> *)((unsigned char *)(objPtr.get()) + offset_);
       if (idx < val->size()) {
         char *valPtr = &((*val)[idx]);
         return (bool *)valPtr;
@@ -129,8 +122,7 @@ class MAO_REFLECTION_EXPORTS classField {
   }
 
   template <class T>
-  void set(const std::shared_ptr<metaObject> &objPtr, size_t idx,
-           const T &value) {
+  void set(const std::shared_ptr<metaObject> &objPtr, size_t idx, const T &value) {
     if (objPtr && is_list()) {
       auto val = (vector<T> *)((unsigned char *)(objPtr.get()) + offset_);
       if (val->size() <= idx) {
@@ -141,8 +133,7 @@ class MAO_REFLECTION_EXPORTS classField {
   }
 
   template <class T>
-  void set(const std::shared_ptr<metaObject> &objPtr, const string &key,
-           const T &value) {
+  void set(const std::shared_ptr<metaObject> &objPtr, const string &key, const T &value) {
     if (objPtr && is_map()) {
       auto val = (map<string, T> *)((unsigned char *)(objPtr.get()) + offset_);
       (*val)[key] = value;
@@ -150,8 +141,7 @@ class MAO_REFLECTION_EXPORTS classField {
   }
 
   template <>
-  void set(const std::shared_ptr<metaObject> &objPtr, size_t idx,
-           const bool &value) {
+  void set(const std::shared_ptr<metaObject> &objPtr, size_t idx, const bool &value) {
     if (objPtr && is_list()) {
       auto val = (vector<char> *)((unsigned char *)(objPtr.get()) + offset_);
       if (val->size() <= idx) {
@@ -169,9 +159,7 @@ class MAO_REFLECTION_EXPORTS classField {
     if (is_list()) {
       return ((vector<T> *)((unsigned char *)(objPtr.get()) + offset_))->size();
     } else if (is_map()) {
-      return ((map<std::string, T> *)((unsigned char *)(objPtr.get()) +
-                                      offset_))
-          ->size();
+      return ((map<std::string, T> *)((unsigned char *)(objPtr.get()) + offset_))->size();
     }
     return 0;
   }

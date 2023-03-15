@@ -10,7 +10,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-
 #include "class_field.h"
 #include "export.h"
 #include "utils/singleton/classSingleton.h"
@@ -66,12 +65,12 @@ class MAO_REFLECTION_EXPORTS metaObject {
       }
     }
   }
+
   template <class T>
   void get(const string &fieldName, const string &key, T &value) {
     auto field = get_field(fieldName);
     if (field && field->is_map()) {
-      map<string, T> *val =
-          (map<string, T> *)((unsigned char *)(this) + field->offset());
+      map < string, T > *val = (map<string, T> *)((unsigned char *)(this) + field->offset());
       if (val->contains(key)) {
         value = (*val)[key];
       }
@@ -95,8 +94,7 @@ class MAO_REFLECTION_EXPORTS metaObject {
   T *get(const string &fieldName, const string &key) {
     auto field = get_field(fieldName);
     if (field && field->is_map()) {
-      map<string, T> *val =
-          (map<string, T> *)((unsigned char *)(this) + field->offset());
+      map < string, T > *val = (map<string, T> *)((unsigned char *)(this) + field->offset());
       if (val->contains(key)) {
         T *valPtr = &((*val)[key]);
         return valPtr;
@@ -109,8 +107,7 @@ class MAO_REFLECTION_EXPORTS metaObject {
   bool *get(const string &fieldName, size_t idx) {
     auto field = get_field(fieldName);
     if (field && field->is_list()) {
-      vector<char> *val =
-          (vector<char> *)((unsigned char *)(this) + field->offset());
+      vector<char> *val = (vector<char> *)((unsigned char *)(this) + field->offset());
       if (idx < val->size()) {
         char *valPtr = &((*val)[idx]);
         return (bool *)valPtr;
@@ -169,9 +166,7 @@ class MAO_REFLECTION_EXPORTS metaObject {
     if (field->is_list()) {
       return ((vector<T> *)((unsigned char *)(this) + field->offset()))->size();
     } else if (field->is_map()) {
-      return ((map<std::string, T> *)((unsigned char *)(this) +
-                                      field->offset()))
-          ->size();
+      return ((map<std::string, T> *)((unsigned char *)(this) + field->offset()))->size();
     }
     return 0;
   }
@@ -190,12 +185,12 @@ class MAO_REFLECTION_EXPORTS classFactory {
 
   void register_class(const string &className, metaObjectCreator creator);
 
-  void register_class(const string &className, const string &parentClassName,
-                      metaObjectCreator creator);
+  void register_class(const string &className, const string &parentClassName, metaObjectCreator creator);
 
   shared_ptr<metaObject> create_class(const string &className);
 
-  void register_class_field(const string &className, size_t offset,
+  void register_class_field(const string &className,
+                            size_t offset,
                             const string &fieldName,
                             const classTypes &fieldType,
                             const classTypes &subFieldType = "");

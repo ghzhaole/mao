@@ -10,7 +10,6 @@
 #include <QWidget>
 #include <memory>
 #include <string>
-
 #include "reflection/class_factory.h"
 
 namespace mao::propertyEditor {
@@ -23,13 +22,14 @@ using std::string;
 using qvariant = QVariant;
 
 class classTreeItem : public QObject {
-  Q_OBJECT
+ Q_OBJECT
  public:
   classTreeItem(const qstring &name = QString(),
                 shared_ptr<maoMetaObject> propertyObject = nullptr,
                 QObject *parent = 0);
 
-  classTreeItem(const qstring &objectName = QString(),const qstring &fieldName = QString(),
+  classTreeItem(const qstring &objectName = QString(),
+                const qstring &fieldName = QString(),
                 shared_ptr<maoMetaObject> propertyObject = nullptr,
                 QObject *parent = 0);
 
@@ -54,8 +54,7 @@ class classTreeItem : public QObject {
 
   virtual void setEditorHints(const QString &hints) { hints_ = hints; }
 
-  virtual QWidget *createEditor(QWidget *parent,
-                                const QStyleOptionViewItem &option);
+  virtual QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option);
 
   virtual bool setEditorData(QWidget *editor, const QVariant &data);
 

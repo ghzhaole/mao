@@ -1,5 +1,4 @@
 #pragma once
-
 #ifdef WIN32
 #ifdef MAO_REFLECTION_EXPORTS_H
 #define MAO_REFLECTION_EXPORTS __declspec(dllexport)

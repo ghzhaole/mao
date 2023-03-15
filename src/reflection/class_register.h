@@ -14,17 +14,17 @@ class classRegister {
     classFactory::instance()->register_class(className, creator);
   }
 
-  classRegister(const string &className, const string &parentClassName,
-                metaObjectCreator creator) {
-    classFactory::instance()->register_class(className, parentClassName,
-                                             creator);
+  classRegister(const string &className, const string &parentClassName, metaObjectCreator creator) {
+    classFactory::instance()->register_class(className, parentClassName, creator);
   }
 
-  template <typename... Ts>
-  classRegister(const string &className, size_t offset, const string &fieldName,
-                const string &fieldType, const Ts &...fieldSubType) {
-    classFactory::instance()->register_class_field(className, offset, fieldName,
-                                                   fieldType, fieldSubType...);
+  template<typename... Ts>
+  classRegister(const string &className,
+                size_t offset,
+                const string &fieldName,
+                const string &fieldType,
+                const Ts &...fieldSubType) {
+    classFactory::instance()->register_class_field(className, offset, fieldName, fieldType, fieldSubType...);
   }
 };
 }  // namespace mao::reflection

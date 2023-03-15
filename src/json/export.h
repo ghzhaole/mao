@@ -1,5 +1,4 @@
 #pragma once
-
 #ifdef WIN32
 #ifdef MAO_JSON_EXPORTS_H
 #define MAO_JSON_EXPORTS __declspec(dllexport)

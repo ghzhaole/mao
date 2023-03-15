@@ -19,8 +19,8 @@ struct point : public mao::reflection::metaObject {
 
 struct child : public parent {
  public:
- std::vector<std::shared_ptr<point>> ps;
-  std::vector<int> vi{3,4};
-  std::map<std::string, int> mi{{"1",2}};
+  std::vector<std::shared_ptr<point>> ps;
+  std::vector<int> vi{3, 4};
+  std::map<std::string, int> mi{{"1", 2}};
 };
 #endif  // MAO_TEST_STRUCT_H

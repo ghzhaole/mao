@@ -3,7 +3,6 @@
 //
 #include <iostream>
 #include <sstream>
-
 #include "json/class_json.h"
 #include "reflection/class_factory.h"
 #include "serialization/class_json_stream.h"
@@ -14,7 +13,8 @@ using namespace mao::reflection;
 using namespace mao::json;
 
 int main() {
-	classJson json = classJson::from_string("{\"1\":2,   \"2\":[1,2,{\"a\":{\"1\":2,   \"2\":[1,2,{\"a\":true}]}}]}");
-	std::cout << json;
-	return 0;
+  classJson json = classJson::from_string(
+      R"({"1":{"a":[3,2,true,false,null,{"v":true,"t":null,"f":{"32":5,"vc":true}}]},"3":4,"5":[6,7,8,{"9":"abc","10":"def"}]})");
+  std::cout << classJson::set_format(true) << json;
+  return 0;
 }

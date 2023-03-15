@@ -9,21 +9,27 @@
 
 namespace mao::propertyEditor {
 class classBoolCombo : public QComboBox {
-  Q_OBJECT
+ Q_OBJECT
  public:
-  classBoolCombo(QWidget* parent = 0);
+  classBoolCombo(QWidget *parent = 0);
+
   virtual ~classBoolCombo();
 
   bool value() const;
+
   void setValue(bool val);
+
  private slots:
+
   void currentChanged(int idx);
 
  signals:
+
   void valueChanged(bool val);
 
  private:
   bool value_;
+
   QStringList bool_list_;
 };
 }  // namespace mao::propertyEditor

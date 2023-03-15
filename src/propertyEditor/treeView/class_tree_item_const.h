@@ -9,7 +9,7 @@
 
 namespace mao::propertyEditor {
 class classTreeItemConst : public classTreeItemCommon {
-  Q_OBJECT
+ Q_OBJECT
  public:
   classTreeItemConst(const qstring &name = QString(),
                      void *propertyObject = nullptr,

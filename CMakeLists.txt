@@ -4,28 +4,34 @@ project(mao)
 
 set(CMAKE_CXX_STANDARD 23)
 
-if(NOT CMAKE_BUILD_TYPE)
-set(CMAKE_BUILD_TYPE Release)
-endif()
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif ()
+
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-D_DEBUG)
+endif ()
 
 # 设置调试版本后缀
 set(CMAKE_DEBUG_POSTFIX "_d")
 
-if(CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
+if (CMAKE_HOST_SYSTEM_NAME MATCHES "Linux")
     message("++++ current platform: Linux ")
     add_definitions(-DLINUX)
-elseif(CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
+elseif (CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
     message("++++ current platform: Windows ")
     add_definitions(-DWINDOWS)
-elseif(CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
+    set(QT_DIR "C:/QT/bin")
+elseif (CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
     message("++++ current platform: Darwin ")
     add_definitions(-DDARWIN)
     set(CMAKE_OSX_ARCHITECTURES "x86_64")
     set(CMAKE_HOST_SYSTEM_PROCESSOR "x86_64")
     set(CMAKE_SYSTEM_PROCESSOR "x86_64")
-else()
+    set(QT_DIR "/Users/leo/Qt/5.15.2/clang_64")
+else ()
     message(FATAL_ERROR "++++ current platform: unkown ")
-endif()
+endif ()
 
 # 设置路径
 set(THIRD_PARTY ${CMAKE_SOURCE_DIR}/3rd_party)

@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include "class_tree_model.h"
 #include "class_tree_widget.h"
 #include "class_variant_delegate.h"

@@ -10,8 +10,7 @@ const std::string &metaObject::get_class_name() const { return class_name_; }
 void metaObject::set_class_name(const string &name) { class_name_ = name; }
 
 size_t metaObject::get_field_count() const {
-  return mao::reflection::classFactory::instance()->get_field_count(
-      class_name_);
+  return mao::reflection::classFactory::instance()->get_field_count(class_name_);
 }
 
 classField *metaObject::get_field(size_t idx) const {
@@ -19,25 +18,20 @@ classField *metaObject::get_field(size_t idx) const {
 }
 
 classField *metaObject::get_field(const string &fieldName) const {
-  return mao::reflection::classFactory::instance()->get_field(class_name_,
-                                                              fieldName);
+  return mao::reflection::classFactory::instance()->get_field(class_name_, fieldName);
 }
 
-void classFactory::register_class(const string &className,
-                                  metaObjectCreator creator) {
+void classFactory::register_class(const string &className, metaObjectCreator creator) {
   class_map_.emplace(className, creator);
 }
 
-void classFactory::register_class(const string &className,
-                                  const string &parentClassName,
-                                  metaObjectCreator creator) {
+void classFactory::register_class(const string &className, const string &parentClassName, metaObjectCreator creator) {
   class_map_.emplace(className, creator);
   size_t parent_field_count = get_field_count(parentClassName);
   for (size_t idx = 0; idx < parent_field_count; ++idx) {
     auto field = get_field(parentClassName, idx);
     if (field) {
-      register_class_field(className, field->offset(), field->name(),
-                           field->type(), field->sub_type());
+      register_class_field(className, field->offset(), field->name(), field->type(), field->sub_type());
     }
   }
 }
@@ -49,15 +43,14 @@ shared_ptr<metaObject> classFactory::create_class(const string &className) {
   return nullptr;
 }
 
-classFactory *classFactory::factory_ins_ =
-    classSingleton<classFactory>::instance();
+classFactory *classFactory::factory_ins_ = classSingleton<classFactory>::instance();
 
-void classFactory::register_class_field(const string &className, size_t offset,
+void classFactory::register_class_field(const string &className,
+                                        size_t offset,
                                         const string &fieldName,
                                         const classTypes &fieldType,
                                         const classTypes &subFieldType) {
-  classField *field =
-      new classField(offset, fieldName, fieldType, subFieldType);
+  classField *field = new classField(offset, fieldName, fieldType, subFieldType);
   field_map_[className].push_back(field);
 }
 
@@ -75,8 +68,7 @@ classField *classFactory::get_field(const string &className, size_t idx) {
   return nullptr;
 }
 
-classField *classFactory::get_field(const string &className,
-                                    const string &fieldName) {
+classField *classFactory::get_field(const string &className, const string &fieldName) {
   if (field_map_.contains(className)) {
     for (auto field : field_map_[className]) {
       if (field->name() == fieldName) {

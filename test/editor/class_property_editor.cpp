@@ -1,9 +1,6 @@
 #include "class_property_editor.h"
-
 #include <qdebug.h>
-
 #include <iostream>
-
 #include "./ui_classpropertyeditor.h"
 #include "reflection/class_factory.h"
 #include "serialization/class_json_stream.h"
@@ -12,10 +9,30 @@
 using namespace mao::library;
 using namespace mao::reflection;
 
-classPropertyEditor::classPropertyEditor(QWidget *parent)
-    : QWidget(parent), ui(new Ui::classPropertyEditor) {
+classPropertyEditor::classPropertyEditor(QWidget *parent) : QWidget(parent), ui(new Ui::classPropertyEditor) {
   ui->setupUi(this);
+#ifdef WINDOWS
+#ifdef _DEBUG
   std::string dllfilepath = R"(mao_data_d.dll)";
+#else
+  std::string dllfilepath = R"(mao_data.dll)";
+#endif
+#endif
+#ifdef LINUX
+#ifdef _DEBUG
+  std::string dllfilepath = R"(mao_data_d.so)";
+#else
+  std::string dllfilepath = R"(mao_data.so)";
+#endif
+#endif
+#ifdef DARWIN
+#ifdef _DEBUG
+  std::string dllfilepath = R"(../../../lib/libmao_data_d.dylib)";
+#else
+  std::string dllfilepath = R"(../../../lib/libmao_data.dylib)";
+#endif
+#endif
+  std::cout << dllfilepath;
   auto ptr_shared_library_ = new classLibraryLoader();
   if (ptr_shared_library_->Load(dllfilepath) == false) {
     return;
