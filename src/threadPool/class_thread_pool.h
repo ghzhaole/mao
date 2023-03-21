@@ -10,6 +10,7 @@
 #include <deque>
 #include <mutex>
 #include <condition_variable>
+#include "export.h"
 
 namespace mao {
 namespace thread {
@@ -20,7 +21,7 @@ using std::set;
 using std::thread;
 using std::mutex;
 using std::condition_variable;
-class classThreadPool {
+class MAO_THREAD_EXPORTS classThreadPool {
  public:
   classThreadPool(size_t count = 8);
   void create();
