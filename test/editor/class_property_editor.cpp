@@ -1,6 +1,9 @@
 #include "class_property_editor.h"
+
 #include <qdebug.h>
+
 #include <iostream>
+
 #include "./ui_classpropertyeditor.h"
 #include "reflection/class_factory.h"
 #include "serialization/class_json_stream.h"
@@ -9,7 +12,8 @@
 using namespace mao::library;
 using namespace mao::reflection;
 
-classPropertyEditor::classPropertyEditor(QWidget *parent) : QWidget(parent), ui(new Ui::classPropertyEditor) {
+classPropertyEditor::classPropertyEditor(QWidget *parent)
+    : QWidget(parent), ui(new Ui::classPropertyEditor) {
   ui->setupUi(this);
 #ifdef WINDOWS
 #ifdef _DEBUG
@@ -49,11 +53,25 @@ classPropertyEditor::classPropertyEditor(QWidget *parent) : QWidget(parent), ui(
   obj_->set("mi", "first", 11);
   obj_->set("mi", "second", 12);
   ui->treeWidget->addObject(obj_);
+  write_to_text_edit();
+  connect(ui->treeWidget->model(),
+          SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &,
+                             const QVector<int> &)),
+          this,
+          SLOT(dataChanged(const QModelIndex &, const QModelIndex &,
+                           const QVector<int> &)));
 }
 
-classPropertyEditor::~classPropertyEditor() {
+classPropertyEditor::~classPropertyEditor() { delete ui; }
+
+void classPropertyEditor::write_to_text_edit() {
   mao::serialization::classJsonStream cjs;
   std::string s = cjs.to_json(obj_);
-  std::cout << s;
-  delete ui;
+  ui->textEdit->clear();
+  ui->textEdit->setText(QString::fromStdString(s));
+}
+
+void classPropertyEditor::dataChanged(const QModelIndex &, const QModelIndex &,
+                                      const QVector<int> &) {
+  write_to_text_edit();
 }
