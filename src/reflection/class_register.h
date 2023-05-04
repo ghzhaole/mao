@@ -29,7 +29,7 @@ class classRegister {
 };
 }  // namespace mao::reflection
 
-#define REGISTER_CLASS(className)                                          \
+#define REGISTER_CLASS(className,...)                                          \
   std::shared_ptr<mao::reflection::metaObject> createObject##className() { \
     std::shared_ptr<mao::reflection::metaObject> obj =                     \
         std::make_shared<className>();                                     \
@@ -37,22 +37,18 @@ class classRegister {
     return obj;                                                            \
   }                                                                        \
   mao::reflection::classRegister classRegister##className(                 \
-      #className, createObject##className);
-#define REGISTER_CLASS_WITH_INHERIT(className, parentClassName)            \
-  std::shared_ptr<mao::reflection::metaObject> createObject##className() { \
-    std::shared_ptr<mao::reflection::metaObject> obj =                     \
-        std::make_shared<className>();                                     \
-    obj->set_class_name(#className);                                       \
-    return obj;                                                            \
-  }                                                                        \
-  mao::reflection::classRegister classRegister##className(                 \
-      #className, #parentClassName, createObject##className);
-#define REGISTER_CLASS_FIELD(className, fieldName, fieldType)           \
-  mao::reflection::classRegister classRegister##className##fieldName(   \
-      #className, (size_t)(&(((className *)0)->fieldName)), #fieldName, \
-      #fieldType);
-#define REGISTER_CLASS_FIELD_1(className, fieldName, fieldType, subType) \
+      #className,__STR__ARGS(__VA_ARGS__), createObject##className);
+
+#define REGISTER_CLASS_FIELD(className, fieldName, fieldType, ...)       \
   mao::reflection::classRegister classRegister##className##fieldName(    \
       #className, (size_t)(&(((className *)0)->fieldName)), #fieldName,  \
-      #fieldType, #subType);
+      #fieldType, __STR__ARGS(__VA_ARGS__));
+
+#define __CONNECT__FLAG(f1, f2) f1##f2 // 宏参数拼接成符号
+#define __CALL(f1, f2) __CONNECT__FLAG(f1, f2) // 宏嵌套
+
+#define __STR__ARGS(...) #__VA_ARGS__ // 宏变长参数
+#define __CONNTECT__ARGS(...) (__VA_ARGS__) // 宏变长参数
+#define __CALL2(f1,f2,...) __CALL(f1,f2)__CONNTECT__ARGS(__VA_ARGS__) // 嵌套+变长参数
+
 #endif  // MAO_CLASS_REGISTER_H

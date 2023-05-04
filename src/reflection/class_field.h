@@ -164,6 +164,18 @@ class MAO_REFLECTION_EXPORTS classField {
     return 0;
   }
 
+  template <class T>
+  bool set_cap(const std::shared_ptr<metaObject> &objPtr,size_t cap) {
+    if (!objPtr) {
+      return false;
+    }
+    if (is_list()) {
+      ((vector<T> *)((unsigned char *)(objPtr.get()) + offset_))->reserve(cap);
+      return true;
+    }
+    return false;
+  }
+
  private:
   size_t offset_;
 

@@ -9,6 +9,8 @@
 #include "serialization/class_json_stream.h"
 #include "utils/library/class_library_loader.h"
 
+#include "reflection/class_register.h"
+
 using namespace mao::library;
 using namespace mao::reflection;
 

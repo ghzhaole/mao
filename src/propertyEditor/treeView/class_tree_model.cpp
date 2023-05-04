@@ -149,6 +149,7 @@ void classTreeModel::addItem(const QString &name, shared_ptr<maoMetaObject> prop
         switch (field_sub_type) {
           case maoMetaType::TYPE_INT: {
             size_t array_size = field->size<int>(propertyObject);
+            field->set_cap<int>(propertyObject, 10240);
             for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
               int *val = field->get<int>(propertyObject, array_idx);
               new classTreeItemCommon(QString("[%1]").arg(array_idx), (void *)val, QMetaType::Int, row_item);
@@ -157,6 +158,7 @@ void classTreeModel::addItem(const QString &name, shared_ptr<maoMetaObject> prop
           }
           case maoMetaType::TYPE_INT64: {
             size_t array_size = field->size<int64_t>(propertyObject);
+            field->set_cap<int64_t>(propertyObject, 10240);
             for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
               int64_t *val = field->get<int64_t>(propertyObject, array_idx);
               new classTreeItemCommon(QString::fromStdString(field->name()),
@@ -168,6 +170,7 @@ void classTreeModel::addItem(const QString &name, shared_ptr<maoMetaObject> prop
           }
           case maoMetaType::TYPE_FLOAT: {
             size_t array_size = field->size<float>(propertyObject);
+            field->set_cap<float>(propertyObject, 10240);
             for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
               float *val = field->get<float>(propertyObject, array_idx);
               new classTreeItemCommon(QString::fromStdString(field->name()), (void *)val, QMetaType::Float, row_item);
@@ -176,6 +179,7 @@ void classTreeModel::addItem(const QString &name, shared_ptr<maoMetaObject> prop
           }
           case maoMetaType::TYPE_DOUBLE: {
             size_t array_size = field->size<double>(propertyObject);
+            field->set_cap<double>(propertyObject, 10240);
             for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
               double *val = field->get<double>(propertyObject, array_idx);
               new classTreeItemCommon(QString::fromStdString(field->name()), (void *)val, QMetaType::Double, row_item);
@@ -184,6 +188,7 @@ void classTreeModel::addItem(const QString &name, shared_ptr<maoMetaObject> prop
           }
           case maoMetaType::TYPE_BOOL: {
             size_t array_size = field->size<bool>(propertyObject);
+            field->set_cap<bool>(propertyObject, 10240);
             for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
               bool *val = field->get<bool>(propertyObject, array_idx);
               new classTreeItemCommon(QString::fromStdString(field->name()), (void *)val, QMetaType::Bool, row_item);
@@ -192,6 +197,7 @@ void classTreeModel::addItem(const QString &name, shared_ptr<maoMetaObject> prop
           }
           case maoMetaType::TYPE_STRING: {
             size_t array_size = field->size<string>(propertyObject);
+            field->set_cap<string>(propertyObject, 10240);
             for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
               string *val = field->get<string>(propertyObject, array_idx);
               new classTreeItemCommon(QString::fromStdString(field->name()), (void *)val, QMetaType::QString, row_item);
@@ -200,6 +206,7 @@ void classTreeModel::addItem(const QString &name, shared_ptr<maoMetaObject> prop
           }
           case maoMetaType::TYPE_CHAR: {
             size_t array_size = field->size<char>(propertyObject);
+            field->set_cap<char>(propertyObject, 10240);
             for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
               char *val = field->get<char>(propertyObject, array_idx);
               new classTreeItemCommon(QString::fromStdString(field->name()), (void *)val, QMetaType::Char, row_item);
@@ -208,6 +215,7 @@ void classTreeModel::addItem(const QString &name, shared_ptr<maoMetaObject> prop
           }
           case maoMetaType::TYPE_OBJECT: {
             size_t array_size = field->size<std::shared_ptr<maoMetaObject>>(propertyObject);
+            field->set_cap<std::shared_ptr<maoMetaObject>>(propertyObject, 10240);
             for (size_t array_idx = 0; array_idx < array_size; ++array_idx) {
               std::shared_ptr<maoMetaObject>
                   subObj = *field->get<std::shared_ptr<maoMetaObject>>(propertyObject, array_idx);

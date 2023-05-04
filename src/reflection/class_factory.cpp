@@ -27,6 +27,9 @@ void classFactory::register_class(const string &className, metaObjectCreator cre
 
 void classFactory::register_class(const string &className, const string &parentClassName, metaObjectCreator creator) {
   class_map_.emplace(className, creator);
+  if(parentClassName.empty()){
+    return;
+  }
   size_t parent_field_count = get_field_count(parentClassName);
   for (size_t idx = 0; idx < parent_field_count; ++idx) {
     auto field = get_field(parentClassName, idx);
